@@ -11,7 +11,8 @@ create table ba_weekday(
 
 create table ba_city(
 	id int,
-	name varchar) ENGINE=InnoDB;
+	name varchar(30),
+	constraint pk_city_id primary key(id)) ENGINE=InnoDB;
 
 create table ba_route(
 	id int,
@@ -50,15 +51,15 @@ create table ba_passenger(
 	id int,
 	boooking_number int,
 	age int,
-	first_name varchar,
-	last_name varchar,
+	first_name varchar(30),
+	last_name varchar(30),
 	constraint pk_passenger_id primary key(id),
 	constraint fk_passenger_booking foreign key(boooking_number) references ba_booking(id)) ENGINE=InnoDB;
 
 create table ba_in_booking(
 	passenger_id int,
-	phone_number varchar,
-	email varchar,
+	phone_number varchar(20),
+	email varchar(30),
 	constraint pk_in_booking_passenger_id primary key(passenger_id),
 	constraint fk_in_booking_passenger foreign key(passenger_id) references ba_passenger(id)) ENGINE=InnoDB;
 
