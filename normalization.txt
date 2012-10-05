@@ -1,0 +1,2 @@
+* Route - weak entity type?
+* Weekday/City - candidate keys
