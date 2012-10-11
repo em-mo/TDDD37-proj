@@ -1,8 +1,3 @@
-drop database brian_air_db;
-create database brian_air_db;
-
-USE brian_air_db;
-
 create table ba_weekday(
 	id int not null auto_increment,
 	name varchar(9) not null,
