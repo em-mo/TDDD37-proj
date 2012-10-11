@@ -48,15 +48,15 @@ begin
 	declare passenger_cursor cursor for select id, age, first_name, last_name from brian_air_db.temp_passenger_booking;
 	declare continue handler for sqlstate '02000' set done = true;	
 
-	#select count(*) into ticket_amount
-	#from ba_ticket t
-	#where flight_id = t.flight_id;
+	select count(*) into ticket_amount
+	from ba_ticket t
+	where flight_id = t.flight_id;
 
 
-	#if ticket_amount < 60 then
+	if ticket_amount < 60 then
 
-	#	insert into ba_booking(flight_id) values (flight_id);
-	#	select last_insert_id() into booking_id;
+		insert into ba_booking(flight_id) values (flight_id);
+		select last_insert_id() into booking_id;
 
 		open passenger_cursor;
 		repeat
@@ -64,11 +64,11 @@ begin
 
 			if not done then
 				insert into ba_passenger(booking_number, age, first_name, last_name) 
-					values(null,age1,first_name1,last_name1);
+					values(booking_id,age1,first_name1,last_name1);
 			end if;
 		until done end repeat;
 		close passenger_cursor;
-	#end if;
+	end if;
 end;//
 
 delimiter ;
