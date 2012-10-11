@@ -1,4 +1,11 @@
-<<<<<<< HEAD
+USE brian_air_db;
+delimiter //
+
+create procedure init_destinations()
+begin
+	insert into ba_city(name) values('Lillby'),('Smallville');
+end;//
+
 create procedure insert_weekly_flight (in weekday varchar(10), in dep_time time, in arr_time time, in route int)
 	begin
 	declare selected_weekday_id int;
@@ -9,17 +16,8 @@ create procedure insert_weekly_flight (in weekday varchar(10), in dep_time time,
 
 	end;//
 
-
 insert into ba_weekday (name, price_factor) values 
 	('monday', 1), ('tuesday', 1), ('wednesday', 1), ('thursday', 1), ('friday', 1), ('saturday', 2), ('sunday', 2);
-=======
-USE brian_air_db;
-delimiter //
-
-create procedure init_destinations()
-begin
-	insert into ba_city(name) values('Lillby'),('Smallville');
-end;//
 
 delimiter ;
->>>>>>> 5be682b6f7fe07bec38c2046bd18206294628f18
+
