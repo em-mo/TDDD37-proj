@@ -29,6 +29,7 @@ create table ba_weekly_flight(
 	departure_time time,
 	arrival_time time,
 	route_id int,
+	year int,
 	constraint pk_weekly_flight_id primary key(id),
 	constraint fk_weekly_flight_weekday_id foreign key(weekday_id) references ba_weekday(id),
 	constraint fk_weekly_flight_route_id foreign key(route_id) references ba_route(id)) ENGINE=InnoDB;
