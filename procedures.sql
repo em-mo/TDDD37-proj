@@ -1,4 +1,3 @@
-USE brian_air_db;
 delimiter //
 
 create procedure init_destinations()

@@ -2,7 +2,7 @@ insert into ba_weekday (name, price_factor) values
 	('monday', 1), ('tuesday', 1), ('wednesday', 1), ('thursday', 1), 
 	('friday', 1), ('saturday', 2), ('sunday', 2);
 
-
+insert into ba_city(name) values('Lillby'),('Smallville');
 insert into ba_route (arrival_city_id, departure_city_id, base_price) values (1, 2, 100);
 
 call insert_weekly_flight('monday', '08:00', '09:00', 1, 2012);
