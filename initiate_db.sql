@@ -6,4 +6,3 @@ USE brian_air_db;
 source brian_air.sql
 source procedures.sql
 source insert_data.sql
-source test.sql
