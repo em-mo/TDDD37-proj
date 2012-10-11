@@ -4,70 +4,70 @@ create database brian_air_db;
 USE brian_air_db;
 
 create table ba_weekday(
-	id int,
-	name varchar(9),
-	price_factor int,
+	id int not null auto_increment,
+	name varchar(9) not null,
+	price_factor float not null,
 	constraint pk_weekday_id primary key(id)) ENGINE=InnoDB;
 
 create table ba_city(
-	id int,
-	name varchar(30),
+	id int not null auto_increment,
+	name varchar(30) not null,
 	constraint pk_city_id primary key(id)) ENGINE=InnoDB;
 
 create table ba_route(
-	id int,
-	departure_city_id int,
-	arrival_city_id int,
-	base_price int,
+	id int not null auto_increment,
+	departure_city_id int not null,
+	arrival_city_id int not null,
+	base_price int not null,
 	constraint pk_route_id primary key(id),
 	constraint fk_route_departure_city_id foreign key(departure_city_id) references ba_city(id),
 	constraint fk_route_arrival_city_id foreign key(arrival_city_id) references ba_city(id)) ENGINE=InnoDB;
 
 create table ba_weekly_flight(
-	id int,
-	weekday_id int,
-	departure_time time,
-	arrival_time time,
-	route_id int,
+	id int not null auto_increment,
+	weekday_id int not null,
+	departure_time time not null,
+	arrival_time time not null,
+	route_id int not null,
 	year int,
 	constraint pk_weekly_flight_id primary key(id),
 	constraint fk_weekly_flight_weekday_id foreign key(weekday_id) references ba_weekday(id),
 	constraint fk_weekly_flight_route_id foreign key(route_id) references ba_route(id)) ENGINE=InnoDB;
 	
 create table ba_flight(
-	id int,
-	weekly_flight_id int,
+	id int not null auto_increment,
+	weekly_flight_id int not null,
 	flight_date date,
 	constraint pk_flight_id primary key(id),
 	constraint fk_flight_weekly_flight foreign key(weekly_flight_id) references ba_weekly_flight(id)) ENGINE=InnoDB;
 
 create table ba_booking(
-	id int,
-	flight_id int,
+	id int not null,
+	flight_id int not null,
 	constraint pk_booking_id primary key(id),
 	constraint fk_booking_flight_id foreign key(flight_id) references ba_flight(id)) ENGINE=InnoDB;
 
 
 create table ba_passenger(
-	id int,
-	boooking_number int,
-	age int,
-	first_name varchar(30),
-	last_name varchar(30),
+	id int not null auto_increment,
+	boooking_number int not null,
+	age int not null,
+	first_name varchar(30) not null,
+	last_name varchar(30) not null,
 	constraint pk_passenger_id primary key(id),
 	constraint fk_passenger_booking foreign key(boooking_number) references ba_booking(id)) ENGINE=InnoDB;
 
-create table ba_in_booking(
-	passenger_id int,
-	phone_number varchar(20),
-	email varchar(30),
+create table ba_contact(
+	passenger_id int not null,
+	phone_number varchar(20) not null,
+	email varchar(30) not null,
 	constraint pk_in_booking_passenger_id primary key(passenger_id),
 	constraint fk_in_booking_passenger foreign key(passenger_id) references ba_passenger(id)) ENGINE=InnoDB;
 
 create table ba_ticket(
-	id int,
-	flight_id int,
+	id int not null auto_increment,
+	flight_id int not null,
 	seat_number int,
-	passenger_id int,
+	passenger_id int not null,
 	constraint pk_ticket_id primary key(id),
 	constraint fk_ticket_flight foreign key(flight_id) references ba_flight(id)) ENGINE=InnoDB;
