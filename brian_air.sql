@@ -39,6 +39,7 @@ create table ba_flight(
 create table ba_booking(
 	id int not null auto_increment,
 	flight_id int not null,
+	amount int not null,
 	constraint pk_booking_id primary key(id),
 	constraint fk_booking_flight_id foreign key(flight_id) references ba_flight(id)) ENGINE=InnoDB;
 
