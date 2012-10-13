@@ -9,24 +9,27 @@ begin
 		values (selected_weekday_id, dep_time, arr_time, route, y);
 end;//
 
-## Work in progress
 drop procedure if exists fill_year_flights//
-create procedure fill_year_flights(in first_day varchar(10), in fill_year year)
+create procedure fill_year_flights(in fill_year year)
 begin
 	declare counter int default 1;
 	declare date_counter date;
 	declare leap int;
 
 	call leap_year(fill_year, leap);
-	set date_counter = makedate(fill_year, 1);
+	set date_counter = makedate(fill_year, 1);	
 
 	repeat
+		insert into ba_flight (weekly_flight_id, flight_date) 
+			select f.id as weekly_flight_id, date_counter as flight_date 
+			from ba_weekly_flight f, ba_weekday d
+			where dayname(date_counter) = d.name and f.weekday_id = d.id and f.flight_year = fill_year;
 
-		set date_counter = date_counter + 1;
+		set date_counter = date_add(date_counter, interval 1 day);
 		set counter = counter + 1;
-	until counter <= leap
+	until counter >= leap
 	end repeat;
-	end;//
+end//
 
 
 drop procedure if exists leap_year//
