@@ -81,6 +81,7 @@ create table ba_payment(
 	credit_card_expiry_month int not null,
 	credit_card_expiry_year int not null,
 	credit_card_number varchar(16) not null,
+	confirmed boolean not null,
 	constraint pk_payment_id primary key(id),
 	constraint fk_payment_booking_id foreign key(booking_id) references ba_booking(id),
 	constraint fk_payment_credit_card_type_id foreign key(credit_card_type_id) references ba_credit_card_type(id)) ENGINE=InnoDB;

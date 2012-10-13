@@ -126,7 +126,7 @@ end//
 create procedure calculate_price(in booking_id int, out price int)
 begin
 	declare base_price int;
-	declare price_factor_day int;
+	declare price_factor_day float;
 	declare price_factor_tickets int;
 	declare passenger_factor int default 5;
 
@@ -134,7 +134,7 @@ begin
 
 	#get base price and price factor for weekday
 	select r.base_price, wd.price_factor  into base_price, price_factor_day
-	from ba_route r, ba_flight f, ba_weekly_flight wf, ba_booking b 
+	from ba_route r, ba_flight f, ba_weekly_flight wf, ba_booking b, ba_weekday wd 
 	where f.weekly_flight_id = wf.id and 
 		  wf.route_id = r.id and
 		  b.flight_id = f.id and
@@ -148,7 +148,7 @@ begin
 	where b.flight_id = t.flight_id;
 
 
-	set price = base_price*price_factor*greatest(1,ticket_amount)/60*passenger_factor; 
+	set price = base_price*price_factor_day*greatest(1,ticket_amount)/60*passenger_factor; 
 end//
 
 
@@ -182,6 +182,7 @@ begin
 	select amount into booking_amount from ba_booking;
 
 	if ticket_amount <= 60 - booking_amount then
+		call calculate_price(booking_id, actual_price);
 		open passenger_cursor;
 		repeat
 			fetch passenger_cursor into id1;
@@ -191,9 +192,8 @@ begin
 		until done end repeat;
 		close passenger_cursor;
 
-		call calculate_price(booking_id, actual_price);
 
-		update ba_payment p set amount = actual_price, confirmed = true
+		update ba_payment p set p.amount = actual_price, p.confirmed = true
 							where p.booking_id = booking_id;
 	else
 		call abort_booking(booking_id);
