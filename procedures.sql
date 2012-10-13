@@ -17,19 +17,22 @@ create procedure insert_weekly_flight (in weekday varchar(10), in dep_time time,
 	end;//
 
 ## Work in progress
-drop procedure if exists fill_year_flights;
+drop procedure if exists fill_year_flights//
 create procedure fill_year_flights(in first_day varchar(10), in fill_year year)
 	begin
 	declare counter int default 1;
+	declare date_counter date;
 	declare leap int;
 
 	call leap_year(fill_year, leap);
+	set date_counter = makedate(fill_year, 1);
 
 	repeat
 
+	set date_counter = date_counter + 1;
 	set counter = counter + 1;
 	until counter <= leap
-	end;
+	end;//
 
 create procedure leap_year(in test_year year, out days int)
 	begin
@@ -37,7 +40,7 @@ create procedure leap_year(in test_year year, out days int)
 		set days = 366;
 	else then
 		set days = 365;
-	end if;
+	end if;//
 
 insert into ba_weekday (name, price_factor) values 
 	('monday', 1), ('tuesday', 1), ('wednesday', 1), ('thursday', 1), ('friday', 1), ('saturday', 2), ('sunday', 2);
