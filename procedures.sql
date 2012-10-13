@@ -1,7 +1,11 @@
 delimiter //
 
 drop procedure if exists insert_weekly_flight//
-create procedure insert_weekly_flight (in weekday varchar(10), in dep_time time, in arr_time time, in route int, in y year)
+create procedure insert_weekly_flight (in weekday varchar(10), 
+									   in dep_time time, 
+									   in arr_time time, 
+									   in route int, 
+									   in y year)
 begin
 	declare selected_weekday_id int;
 	select w.id into selected_weekday_id from ba_weekday w where weekday = w.name;
@@ -43,7 +47,9 @@ begin
 end;//
 
 drop procedure if exists reserve//
-create procedure reserve(in flight_id int, in booking_amount int, out booking_number int)
+create procedure reserve(in flight_id int, 
+						 in booking_amount int, 
+						 out booking_number int)
 begin
 	declare ticket_amount int;
 
@@ -64,7 +70,11 @@ begin
 
 end//
 
-create procedure add_passengers(in contact_id int, in booking_id int)
+drop procedure if exists add_passengers//
+create procedure add_passengers(in contact_id int, 
+								in booking_id int, 
+								in contact_phone_number varchar(20), 
+								in contact_email varchar(30))
 begin
 
 	declare contact int;
