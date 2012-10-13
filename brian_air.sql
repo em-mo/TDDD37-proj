@@ -37,20 +37,19 @@ create table ba_flight(
 	constraint fk_flight_weekly_flight foreign key(weekly_flight_id) references ba_weekly_flight(id)) ENGINE=InnoDB;
 
 create table ba_booking(
-	id int not null,
+	id int not null auto_increment,
 	flight_id int not null,
 	constraint pk_booking_id primary key(id),
 	constraint fk_booking_flight_id foreign key(flight_id) references ba_flight(id)) ENGINE=InnoDB;
 
-
 create table ba_passenger(
 	id int not null auto_increment,
-	boooking_number int not null,
+	booking_number int,
 	age int not null,
 	first_name varchar(30) not null,
 	last_name varchar(30) not null,
 	constraint pk_passenger_id primary key(id),
-	constraint fk_passenger_booking foreign key(boooking_number) references ba_booking(id)) ENGINE=InnoDB;
+	constraint fk_passenger_booking foreign key(booking_number) references ba_booking(id)) ENGINE=InnoDB;
 
 create table ba_contact(
 	passenger_id int not null,
