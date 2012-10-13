@@ -14,12 +14,15 @@ drop procedure if exists fill_year_flights//
 create procedure fill_year_flights(in first_day varchar(10), in fill_year year)
 	begin
 	declare counter int default 1;
+	declare date_counter date;
 	declare leap int;
 
 	call leap_year(fill_year, leap);
+	set date_counter = makedate(fill_year, 1);
 
 	repeat
 
+	set date_counter = date_counter + 1;
 	set counter = counter + 1;
 	until counter <= leap
 	end repeat;
