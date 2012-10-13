@@ -106,32 +106,56 @@ end//
 
 
 #in process
-/*create procedure confirm_booking(booking_id)
-	begin
+create procedure confirm_booking(in booking_id int)
+begin
 
 	declare actual_price int;
+	declare booking_amount int;
+	declare ticket_amount int;
+	declare flight_id int;
 
 	declare id1, age1 int;
-	declare first_name1, last_name1 varchar(30) default '0';
-	declare done int default false;
+	declare done boolean default false;
 	declare passenger_cursor cursor for select id 
 										from ba_passenger p
 										where p.booking_id = booking_id;
+
  	declare continue handler for sqlstate '02000' set done = true;	
+
+	#get flight id
+ 	select b.flight_id into flight_id
+ 	from ba_booking b 
+ 	where b.id = booking_id;
 
 	#get payed seats
 	select count(*) into ticket_amount
 	from ba_ticket t
 	where flight_id = t.flight_id;
 
-	if(ticket_amount)
-	open passenger_cursor;
-	repeat
-	fetch passenger_cursor into id1;
-	until done end repeat;
-	close passenger_cursor;
+	select amount into booking_amount from ba_booking;
 
+	if ticket_amount <= 60 - booking_amount then
+		open passenger_cursor;
+		repeat
+			fetch passenger_cursor into id1;
+			set ticket_amount = ticket_amount + 1;
+			insert into ba_ticket(flight_id, seat_number, passenger_id)
+				   values(flight_id, ticket_amount, id1);
+		until done end repeat;
+		close passenger_cursor;
 
+		call calculate_price(booking_id, actual_price);
+
+		update ba_payment p set amount = actual_price, confirmed = true
+							where p.booking_id = booking_id;
+	else
+		call abort_booking(booking_id);
+	end if;
 end//
-*/
+
+#work in progress
+create procedure abort_booking(in booking_id int)
+begin
+end//
+
 delimiter ;
