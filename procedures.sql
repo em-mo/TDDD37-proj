@@ -1,7 +1,11 @@
 delimiter //
 
 drop procedure if exists insert_weekly_flight//
-create procedure insert_weekly_flight (in weekday varchar(10), in dep_time time, in arr_time time, in route int, in y year)
+create procedure insert_weekly_flight (in weekday varchar(10), 
+									   in dep_time time, 
+									   in arr_time time, 
+									   in route int, 
+									   in y year)
 begin
 	declare selected_weekday_id int;
 	select w.id into selected_weekday_id from ba_weekday w where weekday = w.name;
@@ -43,7 +47,9 @@ begin
 end;//
 
 drop procedure if exists reserve//
-create procedure reserve(in flight_id int, in booking_amount int, out booking_number int)
+create procedure reserve(in flight_id int, 
+						 in booking_amount int, 
+						 out booking_number int)
 begin
 	declare ticket_amount int;
 
@@ -55,7 +61,48 @@ begin
 	#reserve seats if tickets is less than 60
 	if ticket_amount <= (60 - booking_amount) then
 		insert into ba_booking(flight_id, amount) values (flight_id, booking_amount);
+		set booking_number = last_insert_id();
+	elseif ticket_amount = 60 then
+		set booking_number = 0;
+	else
+		set booking_number = -1;
 	end if;
+
+end//
+
+drop procedure if exists add_passengers//
+create procedure add_passengers(in contact_id int, 
+								in booking_id int, 
+								in contact_phone_number varchar(20), 
+								in contact_email varchar(30))
+begin
+
+	declare contact int;
+	declare id1, age1 int default 0;
+	declare first_name1, last_name1 varchar(30);
+	declare done boolean default false;
+
+	declare passenger_cursor cursor for select id, age, first_name, last_name from temp_passenger_booking;
+	declare continue handler for sqlstate '02000' set done = true;
+
+	open passenger_cursor;
+	repeat
+
+		#insert 
+		fetch passenger_cursor into id1, age1, first_name1, last_name1;
+		if not done then
+			insert into ba_passenger(booking_id, age, first_name, last_name) 
+				values(booking_id, age1, first_name1, last_name1);
+		end if;
+
+		if contact_id = id1 then
+			insert into ba_contact(passenger_id, phone_number, email) 
+				values(last_insert_id(), contact_phone_number, contact_email);
+		end if;
+
+	until done end repeat;
+	close passenger_cursor;
+
 end//
 
 
