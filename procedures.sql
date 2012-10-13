@@ -44,7 +44,7 @@ end;//
 
 ##work in progress
 drop procedure if exists reserve//
-create procedure reserve(in flight_id int, in contact_id int, in contact_phone_number varchar(20), in contact_email varchar(30))
+create procedure reserve(in flight_id int, in no_passenger int, out booking_number int)
 begin
 
 	declare ticket_amount int;
