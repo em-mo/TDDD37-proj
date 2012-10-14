@@ -160,7 +160,7 @@ begin
 
 	declare id1, age1 int;
 	declare done boolean default false;
-	declare passenger_cursor cursor for select id 
+	declare ticket_cursor cursor for select id 
 										from ba_passenger p
 										where p.booking_id = booking_id;
 
@@ -176,30 +176,37 @@ begin
 	from ba_ticket t
 	where flight_id = t.flight_id;
 
-	select amount into booking_amount from ba_booking;
+	select amount into booking_amount from ba_booking b where b.id = booking_id;
 
 	if ticket_amount <= 60 - booking_amount then
 		call calculate_price(booking_id, actual_price);
-		open passenger_cursor;
-		repeat
-			fetch passenger_cursor into id1;
+		open ticket_cursor;
+		fetch ticket_cursor into id1;
+		while not done do
 			set ticket_amount = ticket_amount + 1;
 			insert into ba_ticket(flight_id, seat_number, passenger_id)
 				   values(flight_id, ticket_amount, id1);
-		until done end repeat;
-		close passenger_cursor;
+		    fetch ticket_cursor into id1;
+		end while;
+		close ticket_cursor;
 
 
 		update ba_payment p set p.amount = actual_price, p.confirmed = true
 							where p.booking_id = booking_id;
 	else
-		call abort_booking(booking_id);
+		delete from ba_booking where ba_booking.booking_id = booking_id;
 	end if;
 end//
 
 #work in progress
-create procedure abort_booking(in booking_id int)
+create trigger abort_booking
+	before delete on ba_booking 
+	for each row
 begin
+	delete from ba_payment where old.id = ba_payment.booking_id;
+	delete from ba_contact using ba_contact join ba_passenger on ba_contact.passenger_id = ba_passenger.id 
+							 	     where ba_passenger.booking_id = old.id;
+	delete from ba_passenger where ba_passenger.booking_id = old.id;
 end//
 
 delimiter ;
