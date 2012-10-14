@@ -23,7 +23,7 @@ begin
 	call leap_year(fill_year, leap);
 	set date_counter = makedate(fill_year, 1);	
 
-	repeat
+	while counter >= leap do
 		insert into ba_flight (weekly_flight_id, flight_date) 
 			select f.id as weekly_flight_id, date_counter as flight_date 
 			from ba_weekly_flight f, ba_weekday d
@@ -31,8 +31,7 @@ begin
 
 		set date_counter = date_add(date_counter, interval 1 day);
 		set counter = counter + 1;
-	until counter >= leap
-	end repeat;
+	end while;
 end//
 
 
@@ -86,14 +85,12 @@ begin
 	declare continue handler for sqlstate '02000' set done = true;
 
 	open passenger_cursor;
-	repeat
-
+	fetch passenger_cursor into id1, age1, first_name1, last_name1;
+	while not done do
 		#insert 
 		fetch passenger_cursor into id1, age1, first_name1, last_name1;
-		if not done then
 			insert into ba_passenger(booking_id, age, first_name, last_name) 
 				values(booking_id, age1, first_name1, last_name1);
-		end if;
 
 		if contact_id = id1 then
 			insert into ba_contact(passenger_id, phone_number, email) 
