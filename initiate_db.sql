@@ -1,6 +1,5 @@
-drop database brian_air_db;
+drop database if exists brian_air_db;
 create database brian_air_db;
-
 USE brian_air_db;
 
 source brian_air.sql
