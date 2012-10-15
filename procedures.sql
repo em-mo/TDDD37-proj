@@ -23,7 +23,7 @@ begin
 	call leap_year(fill_year, leap);
 	set date_counter = makedate(fill_year, 1);	
 
-	while counter >= leap do
+	while counter <= leap do
 		insert into ba_flight (weekly_flight_id, flight_date) 
 			select f.id as weekly_flight_id, date_counter as flight_date 
 			from ba_weekly_flight f, ba_weekday d
@@ -97,7 +97,7 @@ begin
 				values(last_insert_id(), contact_phone_number, contact_email);
 		end if;
 
-	until done end repeat;
+	end while;
 	close passenger_cursor;
 
 end//

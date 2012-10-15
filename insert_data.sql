@@ -22,7 +22,10 @@ call insert_weekly_flight('thursday', '15:30', '16:30', 1, 2013);
 call insert_weekly_flight('friday', '20:30', '21:30', 1, 2013);
 call insert_weekly_flight('saturday', '16:30', '17:30', 1, 2013);
 
+select 'hej';
+
 call fill_year_flights(2012);
 call fill_year_flights(2013);
 
+select 'då';
 insert into ba_credit_card_type(name) values("VISA");

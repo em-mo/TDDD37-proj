@@ -25,7 +25,8 @@ begin
 		 inner join ba_weekly_flight on ba_flight.weekly_flight_id = ba_weekly_flight.id
 		 left outer join ba_ticket on ba_ticket.flight_id = ba_flight.id
 	where ba_weekly_flight.route_id = selected_route and ba_flight.flight_date = date_of_flight
-	group by ba_flight.id;
+	group by ba_flight.id
+	order by ba_weekly_flight.departure_time;
 end//
 
 drop function if exists calc_price//
