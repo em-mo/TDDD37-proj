@@ -90,7 +90,6 @@ begin
 	fetch passenger_cursor into id1, age1, first_name1, last_name1;
 	while not done do
 		#insert 
-		fetch passenger_cursor into id1, age1, first_name1, last_name1;
 			insert into ba_passenger(booking_id, age, first_name, last_name) 
 				values(booking_id, age1, first_name1, last_name1);
 
@@ -98,7 +97,7 @@ begin
 			insert into ba_contact(passenger_id, phone_number, email) 
 				values(last_insert_id(), contact_phone_number, contact_email);
 		end if;
-
+		fetch passenger_cursor into id1, age1, first_name1, last_name1;
 	end while;
 	close passenger_cursor;
 
@@ -147,7 +146,7 @@ begin
 	where b.flight_id = t.flight_id;
 
 
-	set price = base_price*price_factor_day*greatest(1,ticket_amount)/60*passenger_factor; 
+	set price = base_price*price_factor_day*greatest(1, ifnull(ticket_amount,0))/60*passenger_factor; 
 end//
 
 
@@ -178,7 +177,7 @@ begin
 	from ba_ticket t
 	where flight_id = t.flight_id;
 
-	select amount into booking_amount from ba_booking b where b.id = booking_id;
+	select b.amount into booking_amount from ba_booking b where b.id = booking_id;
 
 	if ticket_amount <= 60 - booking_amount then
 		call calculate_price(booking_id, actual_price);
@@ -196,7 +195,7 @@ begin
 		update ba_payment p set p.amount = actual_price, p.confirmed = true
 							where p.booking_id = booking_id;
 	else
-		delete from ba_booking where ba_booking.booking_id = booking_id;
+		delete from ba_booking where ba_booking.id = booking_id;
 	end if;
 end//
 
