@@ -58,7 +58,9 @@ begin
 	where flight_id = t.flight_id;
 
 	#reserve seats if tickets is less than 60
-	if ticket_amount <= (60 - booking_amount) then
+	if ba_flight.flight_date > date_add(curdate(), interval 1 year) then
+		set booking_number = -2
+	elseif ticket_amount <= (60 - booking_amount) then
 		insert into ba_booking(flight_id, amount) values (flight_id, booking_amount);
 		set booking_number = last_insert_id();
 	elseif ticket_amount = 60 then
