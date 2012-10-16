@@ -1,6 +1,8 @@
-insert into ba_weekday (name, price_factor) values 
-	('monday', 1), ('tuesday', 1), ('wednesday', 1), ('thursday', 1), 
-	('friday', 1), ('saturday', 2), ('sunday', 2);
+insert into ba_weekday (name, price_factor, weekday_year) values 
+	('monday', 1, 2012), ('tuesday', 1, 2012), ('wednesday', 1, 2012), ('thursday', 1, 2012), 
+	('friday', 1, 2012), ('saturday', 2, 2012), ('sunday', 2, 2012),
+	('monday', 2, 2013), ('tuesday', 2, 2013), ('wednesday', 2, 2013), ('thursday', 2, 2013), 
+	('friday', 2, 2013), ('saturday', 4, 2013), ('sunday', 4, 2013);
 
 insert into ba_city(name) values('Lillby'),('Smallville');
 insert into ba_route (arrival_city_id, departure_city_id, base_price) values (1, 2, 100);

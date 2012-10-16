@@ -8,7 +8,8 @@ create procedure insert_weekly_flight (in weekday varchar(10),
 									   in y year)
 begin
 	declare selected_weekday_id int;
-	select w.id into selected_weekday_id from ba_weekday w where weekday = w.name;
+	select w.id into selected_weekday_id from ba_weekday w where w.name = weekday and w.weekday_year = y;
+
 	insert into ba_weekly_flight (weekday_id, departure_time, arrival_time, route_id, flight_year)
 		values (selected_weekday_id, dep_time, arr_time, route, y);
 end;//
@@ -25,9 +26,9 @@ begin
 
 	while counter <= leap do
 		insert into ba_flight (weekly_flight_id, flight_date) 
-			select f.id as weekly_flight_id, date_counter as flight_date 
-			from ba_weekly_flight f, ba_weekday d
-			where dayname(date_counter) = d.name and f.weekday_id = d.id and f.flight_year = fill_year;
+			select wf.id as weekly_flight_id, date_counter as flight_date 
+			from ba_weekly_flight wf, ba_weekday d
+			where d.name = dayname(date_counter) and d.weekday_year = fill_year and wf.weekday_id = d.id and wf.flight_year = fill_year;
 
 		set date_counter = date_add(date_counter, interval 1 day);
 		set counter = counter + 1;
