@@ -182,6 +182,7 @@ begin
 
 	select b.amount into booking_amount from ba_booking b where b.id = booking_id;
 
+	#Give out tickets if enough are remaining
 	if ticket_amount <= 60 - booking_amount then
 		call calculate_price(booking_id, actual_price);
 		open ticket_cursor;
@@ -202,7 +203,6 @@ begin
 	end if;
 end//
 
-#work in progress
 drop trigger if exists abort_booking;//
 create trigger abort_booking
 	before delete on ba_booking 
