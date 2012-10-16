@@ -1,7 +1,8 @@
 create table ba_weekday(
 	id int not null auto_increment,
-	name varchar(9) unique not null,
+	name varchar(9) not null,
 	price_factor float not null,
+	weekday_year year not null,
 	constraint pk_weekday_id primary key(id)) ENGINE=InnoDB;
 
 create table ba_city(
