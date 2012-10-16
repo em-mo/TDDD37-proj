@@ -51,15 +51,16 @@ create procedure reserve(in flight_id int,
 						 out booking_number int)
 begin
 	declare ticket_amount int;
+	declare flight_date date;
 
 	#Number of paid for seats
-	select count(*) into ticket_amount
-	from ba_ticket t
+	select count(*), f.flight_date into ticket_amount, flight_date
+	from ba_ticket t, ba_flight f
 	where flight_id = t.flight_id;
 
 	#reserve seats if tickets is less than 60
-	if ba_flight.flight_date > date_add(curdate(), interval 1 year) then
-		set booking_number = -2
+	if flight_date > date_add(curdate(), interval 1 year) then
+		set booking_number = -2;
 	elseif ticket_amount <= (60 - booking_amount) then
 		insert into ba_booking(flight_id, amount) values (flight_id, booking_amount);
 		set booking_number = last_insert_id();
@@ -104,7 +105,7 @@ begin
 end//
 
 
-
+drop procedure if exists add_payment_details;//
 create procedure add_payment_details(in booking_id int, 
 									 in credit_card_name varchar(30),
 								  	 in credit_card_type_id int,
@@ -121,6 +122,7 @@ begin
 				      credit_card_expiry_year, credit_card_number, 0);
 end//
 
+drop procedure if exists calculate_price;//
 create procedure calculate_price(in booking_id int, out price int)
 begin
 	declare base_price int;
@@ -150,7 +152,8 @@ begin
 end//
 
 
-#in process
+
+drop procedure if exists confirm_booking;//
 create procedure confirm_booking(in booking_id int)
 begin
 
@@ -162,8 +165,8 @@ begin
 	declare id1, age1 int;
 	declare done boolean default false;
 	declare ticket_cursor cursor for select id 
-										from ba_passenger p
-										where p.booking_id = booking_id;
+										from ba_passenger ps
+										where ps.booking_id = booking_id;
 
  	declare continue handler for sqlstate '02000' set done = true;	
 
@@ -200,6 +203,7 @@ begin
 end//
 
 #work in progress
+drop trigger if exists abort_booking;//
 create trigger abort_booking
 	before delete on ba_booking 
 	for each row
