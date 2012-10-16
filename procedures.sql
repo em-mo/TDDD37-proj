@@ -14,6 +14,7 @@ begin
 		values (selected_weekday_id, dep_time, arr_time, route, y);
 end;//
 
+#Loops over a selected year and creates flights out of weekly_flights
 drop procedure if exists fill_year_flights//
 create procedure fill_year_flights(in fill_year year)
 begin
@@ -59,7 +60,7 @@ begin
 	from ba_ticket t, ba_flight f
 	where flight_id = t.flight_id;
 
-	#reserve seats if tickets is less than 60
+	#reserve seats if tickets is less than 60 otherwise random error codes
 	if flight_date > date_add(curdate(), interval 1 year) then
 		set booking_number = -2;
 	elseif ticket_amount <= (60 - booking_amount) then

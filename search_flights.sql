@@ -1,5 +1,6 @@
 delimiter //
 
+#Finds flights without restrictions
 drop procedure if exists find_all_flights//
 create procedure find_all_flights(in from_city varchar(20), in to_city varchar(20), in date_of_flight date, in no_passengers int)
 begin
@@ -29,6 +30,7 @@ begin
 	order by ba_weekly_flight.departure_time;
 end//
 
+#Finds flights that are within a year from today
 drop procedure if exists find_flights//
 create procedure find_flights(in from_city varchar(20), in to_city varchar(20), in date_of_flight date, in no_passengers int)
 begin
